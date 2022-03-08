@@ -8,6 +8,7 @@ import android.os.Looper
 import androidx.core.content.ContextCompat
 import com.zcdev.dpannagedz.MainActivity
 import com.zcdev.dpannagedz.R
+import com.zcdev.dpannagedz.activities.accounts.AccountActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
         supportActionBar!!.hide()
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this,AccountActivity::class.java))
         },3000)
     }
 }
