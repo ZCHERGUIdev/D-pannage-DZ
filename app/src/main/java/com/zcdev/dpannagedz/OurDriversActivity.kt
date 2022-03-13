@@ -1,16 +1,21 @@
 package com.zcdev.dpannagedz
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 
@@ -22,6 +27,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.zcdev.dpannagedz.data.Models.Places
 import com.zcdev.dpannagedz.databinding.ActivityOurDriversBinding
 
 class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -30,7 +36,7 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOurDriversBinding
     var currentlocation: Location? = null
     var currentMarker: Marker? = null
-
+    var driverLocation=ArrayList<Places>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +52,21 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar!!.hide()
 
         permissionCheck()
+        //add places
+        addPlaces()
+
     }
+
+    private fun addPlaces() {
+        var p1=Places(1,R.drawable.logo,"Mustapha Stamboli",35.414427,0.1268365)
+        var p2=Places(1,R.drawable.logo2,"Menage",35.3992096,0.1441682)
+        var p3=Places(1,R.drawable.logo1,"Food",35.3989479,0.1393044)
+
+        driverLocation.add(p1)
+        driverLocation.add(p2)
+        driverLocation.add(p3)
+    }
+
     private fun permissionCheck() {
         var ACSESSLOCATIONREQUESTCODE = 0
         if (Build.VERSION.SDK_INT >= 23) {
@@ -86,9 +106,47 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
+       /* val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
+             for (i in 0..driverLocation.size-1)
+       {val place = LatLng(driverLocation[i].placeLocation!!.latitude, driverLocation[i].placeLocation!!.longitude)
+           mMap.addMarker(MarkerOptions()
+               .position(place)
+               .title(driverLocation[i].name)
+               .snippet("Number Phone "+"0792930900")
+               .icon(BitmapDescriptorFactory.fromBitmap(scaleimage(resources,R.drawable.logo,100))))
+           mMap.moveCamera(CameraUpdateFactory.newLatLng(place))
+           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place,15f))
+           googleMap.setOnMarkerClickListener ( object :GoogleMap.OnMarkerClickListener{
+               override fun onMarkerClick(p0: Marker): Boolean {
+                   Toast.makeText(applicationContext, "show custom dialog", Toast.LENGTH_SHORT).show()
+                   var view: View
+                   view=layoutInflater.inflate(R.layout.info_drivers,null)
+                  /* view.editMaher.text=item[i].craft
+                   view.editName.text=item[i].userName
+                   view.phoneNumber.text=item[i].phonenumber.toString()
+                   view.wilayaName.text=item[i].state.toString()*/
+                   /*     Picasso.with(this@MapsOrderActivity)
+                            .load(objs[i].getParseFile("image").url)
+                            .into(imageEmployee)*/
+                   showAlertDialog(view)
+                    return true
+               }
+
+           })
+       }
+
+    }
+
+    private fun showAlertDialog(view: View) {
+        //var view:View
+        // view=layoutInflater.inflate(R.layout.info_ofworker,null)
+        var dialog= AlertDialog.Builder(this)
+            .setView(view)
+        view.setBackgroundResource(R.color.black)
+        dialog.create()
+        dialog.show()
     }
 
 
@@ -106,17 +164,18 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun onLocationChanged(p0: Location) {
         updatelocation(p0)
         }
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
 
-
+        }
     }
 
 
     private fun updatelocation(p0: Location?) {
-       /* Toast.makeText(
+        Toast.makeText(
             this.baseContext,
             "Location hase been Change" + p0!!.longitude + " " + p0!!.latitude,
             Toast.LENGTH_LONG
-        ).show()*/
+        ).show()
         mMap.clear()
         val loc = LatLng(p0!!.latitude, p0!!.longitude)
         if (currentMarker != null) {
@@ -125,7 +184,7 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         currentMarker = mMap.addMarker(
             MarkerOptions()
                 .position(loc)
-                .title("I ma Hre")
+                .title("Please I need help ")
                 .snippet("this is my current location")
                 .icon(
                     BitmapDescriptorFactory.fromBitmap(
@@ -164,5 +223,29 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         b = BitmapFactory.decodeResource(res, id, o2)
         return b
 
+    }
+
+
+
+    /*
+    * show multiMarkers
+    *         for(i in 0..listOfPlaces.size-1)
+         {
+          var place=listOfPlaces[i]
+            val loc = LatLng(place.pLoc!!.latitude,place.pLoc!!.longitude)
+        mMap.addMarker(
+            MarkerOptions().position(loc).title(place.pName).icon(
+                BitmapDescriptorFactory.fromBitmap(scaleimage(resources, R.drawable.uberxl, 80))
+            )
+        )
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc,4f))
+
+         }
+    *
+    * */
+
+
+    fun doCall(view: View){
+        startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+"0792930900")))
     }
 }

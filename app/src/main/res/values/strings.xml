@@ -4,4 +4,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="phone_number">+213</string>
     <string name="title_activity_our_drivers">OurDriversActivity</string>
+    <string name="app_id">7twlSPtsOVdkYOkYDqDKRxa6v3ffD9HdlsZpZQD5</string>
+    <string name="client_key">M6AUTeOxHUQuaYhZv7E2ulXBuBh5pkW2aq63Zxyf</string>
+    <string name="server">https://parseapi.back4app.com</string>
+
+
 </resources>
