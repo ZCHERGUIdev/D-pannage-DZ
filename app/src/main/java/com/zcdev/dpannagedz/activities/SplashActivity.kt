@@ -19,6 +19,7 @@ class SplashActivity : AppCompatActivity() {
         window.statusBarColor = ContextCompat.getColor(this, R.color.black)
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this,AccountActivity::class.java))
+            finish()
         },3000)
     }
 }

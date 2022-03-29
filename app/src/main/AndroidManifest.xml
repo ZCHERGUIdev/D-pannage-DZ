@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zcdev.dpannagedz">
-
+    package="com.zcdev.dpannagedz" >
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@drawable/logo"
-        android:label="@string/app_name"
         android:name=".App"
+        android:allowBackup="true"
+        android:icon="@drawable/widelogo"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DépannageDZ">
+        android:theme="@style/Theme.DépannageDZ" >
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -32,14 +34,15 @@
 
         <activity
             android:name=".OurDriversActivity"
-            android:exported="false"
-            android:label="@string/title_activity_our_drivers" />
+            android:exported="true"
+            android:label="@string/title_activity_our_drivers" >
+        </activity>
         <activity
             android:name=".activities.accounts.AccountActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SplashActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,6 +52,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false"/>
     </application>
 
 </manifest>

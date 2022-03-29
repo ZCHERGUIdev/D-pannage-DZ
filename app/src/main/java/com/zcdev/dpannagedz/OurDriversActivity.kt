@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -15,6 +14,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -27,8 +27,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.zcdev.dpannagedz.data.Models.Places
+import com.zcdev.dpannagedz.data.dao.driverDao
 import com.zcdev.dpannagedz.databinding.ActivityOurDriversBinding
+import kotlinx.android.synthetic.main.info_drivers.view.*
 
 class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -36,7 +37,7 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityOurDriversBinding
     var currentlocation: Location? = null
     var currentMarker: Marker? = null
-    var driverLocation=ArrayList<Places>()
+    var driverDao:driverDao?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,14 +51,16 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         supportActionBar!!.hide()
+        //init
+        driverDao= driverDao()
 
         permissionCheck()
+        Log.d("myloc","loc: "+currentlocation.toString())
         //add places
-        addPlaces()
-
+      //  addPlaces()
     }
 
-    private fun addPlaces() {
+ /*   private fun addPlaces() {
         var p1=Places(1,R.drawable.logo,"Mustapha Stamboli",35.414427,0.1268365)
         var p2=Places(1,R.drawable.logo2,"Menage",35.3992096,0.1441682)
         var p3=Places(1,R.drawable.logo1,"Food",35.3989479,0.1393044)
@@ -65,7 +68,7 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         driverLocation.add(p1)
         driverLocation.add(p2)
         driverLocation.add(p3)
-    }
+    }*/
 
     private fun permissionCheck() {
         var ACSESSLOCATIONREQUESTCODE = 0
@@ -83,12 +86,13 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         // contunu becouse u have permission
-        Getcurruentlocation();
+        Getcurruentlocation()
     }
     private fun Getcurruentlocation() {
         Toast.makeText(this.baseContext, "User enable the location service", Toast.LENGTH_LONG)
             .show()
         var locationOnmap = MapLocationListner(this.baseContext)
+        Log.d("loctest","heeey"+locationOnmap.toString())
         var locationmanager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationmanager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 0f, locationOnmap)
     }
@@ -106,38 +110,87 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-       /* val sydney = LatLng(-34.0, 151.0)
+        val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
-             for (i in 0..driverLocation.size-1)
-       {val place = LatLng(driverLocation[i].placeLocation!!.latitude, driverLocation[i].placeLocation!!.longitude)
-           mMap.addMarker(MarkerOptions()
-               .position(place)
-               .title(driverLocation[i].name)
-               .snippet("Number Phone "+"0792930900")
-               .icon(BitmapDescriptorFactory.fromBitmap(scaleimage(resources,R.drawable.logo,100))))
-           mMap.moveCamera(CameraUpdateFactory.newLatLng(place))
-           mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place,15f))
-           googleMap.setOnMarkerClickListener ( object :GoogleMap.OnMarkerClickListener{
-               override fun onMarkerClick(p0: Marker): Boolean {
-                   Toast.makeText(applicationContext, "show custom dialog", Toast.LENGTH_SHORT).show()
-                   var view: View
-                   view=layoutInflater.inflate(R.layout.info_drivers,null)
-                  /* view.editMaher.text=item[i].craft
-                   view.editName.text=item[i].userName
-                   view.phoneNumber.text=item[i].phonenumber.toString()
-                   view.wilayaName.text=item[i].state.toString()*/
-                   /*     Picasso.with(this@MapsOrderActivity)
-                            .load(objs[i].getParseFile("image").url)
-                            .into(imageEmployee)*/
-                   showAlertDialog(view)
-                    return true
-               }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,10f))
+      //  Log.d("tessst",getRecordByDriverUserName().get(0).driverPhone.toString())
 
-           })
-       }
+       /* driverDao?.getNearbyDrivers { driversList->
+
+
+            if(driversList.size>0){
+               //your code
+                for (i in 0..driversList.size-1)
+                {
+                    Log.d("position",i.toString())
+                    val place = LatLng(driversList[i].location!!.latitude, driversList[i].location!!.longitude)
+                    Log.d("tessst",driversList[i].driverPhone.toString())
+                    mMap.addMarker(MarkerOptions()
+                        .position(place)
+                        .title(driversList[i].driverUserName)
+
+                        .snippet("Number Phone "+driversList[i].driverPhone)
+                        .icon(BitmapDescriptorFactory.fromBitmap(scaleimage(resources,R.drawable.driver,60))))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(place))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place,15f))
+                    mMap.setOnMarkerClickListener ( object :GoogleMap.OnMarkerClickListener{
+                        override fun onMarkerClick(p0: Marker): Boolean {
+
+                         //   Toast.makeText(this@OurDriversActivity, "position"+p0.id.substring(1,2), Toast.LENGTH_SHORT).show()
+                          //  Toast.makeText(applicationContext, "show custom dialog", Toast.LENGTH_SHORT).show()
+                            var view: View
+                            view=layoutInflater.inflate(R.layout.info_drivers,null)
+
+                            // view.editMaher.text=item[i].craft
+                            view.editName.text=driversList[p0.id.substring(1,2).toInt()].driverUserName
+                            view.phoneNumber.text=driversList[p0.id.substring(1,2).toInt()].driverPhone.toString()
+                            view.wilayaName.text=driversList[p0.id.substring(1,2).toInt()].wilaya.toString()
+                            /*     Picasso.with(this@MapsOrderActivity)
+                                     .load(objs[i].getParseFile("image").url)
+                                     .into(imageEmployee)*/
+                            view.btnCall.setOnClickListener {
+                                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+driversList[p0.id.substring(1,2).toInt()].driverPhone.toString())))
+                            }
+                            // showAlertDialog(view)
+                            var dialog= AlertDialog.Builder(this@OurDriversActivity)
+                                .setView(view)
+                            view.setBackgroundResource(R.color.black)
+                            dialog.create()
+                            dialog.show()
+                      return true
+                        }
+
+                    })
+                }
+            }else{
+                Toast.makeText(this.applicationContext, "no drivers found", Toast.LENGTH_SHORT).show()
+            }
+        }*/
 
     }
+
+    /*
+    *   Toast.makeText(applicationContext, "show custom dialog", Toast.LENGTH_SHORT).show()
+                            var view: View
+                            view=layoutInflater.inflate(R.layout.info_drivers,null)
+
+                            // view.editMaher.text=item[i].craft
+                            view.editName.text=driversList[p0.position.toString().toInt()].driverUserName
+                            view.phoneNumber.text=driversList[1].driverPhone.toString()
+                                  view.wilayaName.text=driversList[2].wilaya.toString()
+                            /*     Picasso.with(this@MapsOrderActivity)
+                                     .load(objs[i].getParseFile("image").url)
+                                     .into(imageEmployee)*/
+                            view.btnCall.setOnClickListener {
+                                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+driversList[i].driverPhone.toString())))
+                            }
+                           // showAlertDialog(view)
+                            var dialog= AlertDialog.Builder(this@OurDriversActivity)
+                                .setView(view)
+                            view.setBackgroundResource(R.color.black)
+                            dialog.create()
+                            dialog.show()
+                            return true*/
 
     private fun showAlertDialog(view: View) {
         //var view:View
@@ -171,35 +224,87 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     private fun updatelocation(p0: Location?) {
-        Toast.makeText(
+       /* Toast.makeText(
             this.baseContext,
             "Location hase been Change" + p0!!.longitude + " " + p0!!.latitude,
             Toast.LENGTH_LONG
-        ).show()
-        mMap.clear()
+        ).show()*/
+       // mMap.clear()
         val loc = LatLng(p0!!.latitude, p0!!.longitude)
-        if (currentMarker != null) {
+       /* if (currentMarker != null) {
             currentMarker!!.remove()
-        }
+        }*/
         currentMarker = mMap.addMarker(
             MarkerOptions()
                 .position(loc)
-                .title("Please I need help ")
+                .title("Hey Iam here ")
                 .snippet("this is my current location")
                 .icon(
                     BitmapDescriptorFactory.fromBitmap(
                         scaleimage(
                             resources,
-                            R.drawable.logo,
+                            R.drawable.widelogo,
                             100
                         )
                     )
                 )
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc,15f))
-
-
         currentlocation = p0
+
+        driverDao?.getNearbyDrivers(currentlocation!!) { driversList->
+
+
+            if(driversList.size>0){
+                //your code
+                for (i in 0..driversList.size-1)
+                {
+                    Log.d("position",i.toString())
+                    val place = LatLng(driversList[i].location!!.latitude, driversList[i].location!!.longitude)
+                    Log.d("tessst",driversList[i].driverPhone.toString())
+                    mMap.addMarker(MarkerOptions()
+                        .position(place)
+                        .title(driversList[i].driverUserName)
+                        .snippet("Number Phone "+driversList[i].driverPhone)
+                       // .icon(BitmapDescriptorFactory.fromBitmap(scaleimage(resources,R.drawable.markerdriver,60)))
+                    )
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(place))
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place,15f))
+                    mMap.setOnMarkerClickListener ( object :GoogleMap.OnMarkerClickListener{
+                        override fun onMarkerClick(p0: Marker): Boolean {
+
+                            //   Toast.makeText(this@OurDriversActivity, "position"+p0.id.substring(1,2), Toast.LENGTH_SHORT).show()
+                            //  Toast.makeText(applicationContext, "show custom dialog", Toast.LENGTH_SHORT).show()
+                            var view: View
+                            view=layoutInflater.inflate(R.layout.info_drivers,null)
+
+                            // view.editMaher.text=item[i].craft
+                            view.editName.text=driversList[p0.id.substring(1,2).toInt()].driverUserName
+                            view.phoneNumber.text=driversList[p0.id.substring(1,2).toInt()].driverPhone.toString()
+                            view.wilayaName.text=driversList[p0.id.substring(1,2).toInt()].wilaya.toString()
+                            /*     Picasso.with(this@MapsOrderActivity)
+                                     .load(objs[i].getParseFile("image").url)
+                                     .into(imageEmployee)*/
+                            view.btnCall.setOnClickListener {
+                                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+driversList[p0.id.substring(1,2).toInt()].driverPhone.toString())))
+                            }
+                            // showAlertDialog(view)
+                            var dialog= AlertDialog.Builder(this@OurDriversActivity)
+                                .setView(view)
+                            view.setBackgroundResource(R.color.black)
+                            dialog.create()
+                            dialog.show()
+                            return true
+                        }
+
+                    })
+                }
+            }else{
+                Toast.makeText(this.applicationContext, "no drivers found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
 
     }
 
@@ -248,4 +353,32 @@ class OurDriversActivity : AppCompatActivity(), OnMapReadyCallback {
     fun doCall(view: View){
         startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+"0792930900")))
     }
+
+
+ /*   fun getRecordByDriverUserName():MutableList<Drivers>{
+        var records=mutableListOf<Drivers>()
+       //  var listOfRecord:MutableList<Drivers>
+        var query = ParseQuery.getQuery<ParseObject>(Drivers::class.java.simpleName)
+      //  query.whereEqualTo("customerUsername",rec.customerUsername)
+        query.findInBackground({objs,e->
+            if (e==null) {
+                objs.mapTo(records){toSingleRecordDriver(it)}
+                Log.d("size",objs.size.toString())
+            }else{
+                Log.i("APP","description"+e.message)
+            }
+        })
+
+        return records
+    }*/
+
+ /*   private fun toSingleRecordDriver(parseDriver: ParseObject?): Drivers {
+        var driver=Drivers()
+        driver.ObjectId=parseDriver!!.objectId
+        driver.driverUserName=parseDriver.getString("driverUserName")
+        driver.driverUserEmail=parseDriver.getString("driverUserEmail")
+        driver.driverPhone=parseDriver.getString("driverPhone")
+        driver.location=parseDriver.getParseGeoPoint("Location")
+        return driver
+    }*/
 }

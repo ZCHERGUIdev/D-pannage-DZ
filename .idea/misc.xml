@@ -5,12 +5,27 @@
       <map>
         <entry key="..\:/Users/ADMIN/AppData/Local/Android/Sdk/platforms/android-31/data/res/drawable/ic_phone.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/drawable/backgroud_circle.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/drawable/ic_cancel.xml" value="0.19814814814814816" />
+        <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/drawable/ic_phone.xml" value="0.19814814814814816" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/font/fonts.xml" value="0.23958333333333334" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/activity_account.xml" value="0.209375" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/activity_our_drivers.xml" value="0.209375" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/activity_splash.xml" value="0.209375" />
         <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/fragment_home.xml" value="0.209375" />
-        <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/info_drivers.xml" value="0.2" />
+        <entry key="..\:/Users/ADMIN/Desktop/DpannageDZ/app/src/main/res/layout/info_drivers.xml" value="0.22" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DZDEPANDROID/DpannageDZ/app/src/main/res/layout/activity_account.xml" value="0.17685185185185184" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DZDEPANDROID/DpannageDZ/app/src/main/res/layout/activity_splash.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DZDEPANDROID/DpannageDZ/app/src/main/res/layout/activity_splash_dactivity.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/activity_account.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/activity_registre.xml" value="0.1796875" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/activity_registre_drivers.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/activity_splash.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/activity_splash_dactivity.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/info_drivers.xml" value="0.1962962962962963" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/network_security_config.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/layout/verificationcodeview.xml" value="0.209375" />
+        <entry key="..\:/Users/ADMIN/Desktop/desktop/DpannageDZ/app/src/main/res/xml/network_security_config.xml" value="0.18333333333333332" />
       </map>
     </option>
   </component>
